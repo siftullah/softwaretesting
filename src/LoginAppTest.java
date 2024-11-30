@@ -15,7 +15,7 @@ public class LoginAppTest {
         String validPassword = "password101";
         String expectedUserName = "Alice Brown";
 
-        String result = loginApp.authenticateUser(validEmail);
+        String result = loginApp.authenticateUser(validEmail,validPassword);
 
         assertNotNull(result, "Incorrect Output. User should be logged in");
         assertEquals(expectedUserName, result, "Wrong Username Returned.");
@@ -27,7 +27,7 @@ public class LoginAppTest {
         validPassword = "password789";
         expectedUserName = "Mike Johnson";
 
-        result = loginApp.authenticateUser(validEmail);
+        result = loginApp.authenticateUser(validEmail,validPassword);
 
         assertNotNull(result, "Incorrect Output. User should be logged in");
         assertEquals(expectedUserName, result, "Wrong Username Returned.");
@@ -40,7 +40,7 @@ public class LoginAppTest {
 
         String invalidEmail = "invalidemail@example.com";
         String validPassword = "password101";
-        String result = loginApp.authenticateUser(invalidEmail);
+        String result = loginApp.authenticateUser(invalidEmail,validPassword);
 
         assertNull(result, "Incorrect Output. User should not be logged in");
 
@@ -48,7 +48,7 @@ public class LoginAppTest {
 
         invalidEmail = "incorrectemail@example.com";
         validPassword = "password789";
-        result = loginApp.authenticateUser(invalidEmail);
+        result = loginApp.authenticateUser(invalidEmail,validPassword);
 
         assertNull(result, "Incorrect Output. User should not be logged in");
     }
@@ -59,7 +59,7 @@ public class LoginAppTest {
         String validEmail = "alicebrown@example.com";
         String invalidPassword = "password103";
 
-        String result = loginApp.authenticateUser(validEmail);
+        String result = loginApp.authenticateUser(validEmail,invalidPassword);
 
         assertNull(result, "Incorrect Output. User should not be logged in because password is invalid");
     }
@@ -70,7 +70,7 @@ public class LoginAppTest {
         String emptyEmail = "";
         String validPassword = "password101";
 
-        String result = loginApp.authenticateUser(emptyEmail);
+        String result = loginApp.authenticateUser(emptyEmail,validPassword);
 
         assertNull(result, "Incorrect Output. User should not be logged in because email is null");
     }
@@ -81,7 +81,7 @@ public class LoginAppTest {
         String validEmail = "alicebrown@example.com";
         String emptyPassword = "";
 
-        String result = loginApp.authenticateUser(validEmail);
+        String result = loginApp.authenticateUser(validEmail,emptyPassword);
 
         assertNull(result, "Incorrect Output. User should not be logged in because password is null");
     }
@@ -90,7 +90,7 @@ public class LoginAppTest {
     public void testAuthenticateUser_SQLInjection() {
         // SQL Injection attempt
         String sqlInjectionEmail = "incorrectemail@example.com' OR '1'='1";
-        String result = loginApp.authenticateUser(sqlInjectionEmail);
+        String result = loginApp.authenticateUser(sqlInjectionEmail,"");
 
         // Since the prepared statement is used, this should fail and return null
         assertNull(result, "SQL Injection attempt should not authenticate any user");

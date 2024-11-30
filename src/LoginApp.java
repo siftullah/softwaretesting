@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 public class LoginApp extends JFrame {
     public JTextField emailField;
@@ -48,21 +49,32 @@ public class LoginApp extends JFrame {
             String email = emailField.getText();
             String password = new String(passwordField.getPassword()); // Password is ignored for validation
 
-            String userName = authenticateUser(email);
+            if(Objects.equals(email, "") || email == null) {
+                JOptionPane.showMessageDialog(null, "Email cannot be empty", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if(Objects.equals(password, "") || password == null) {
+                JOptionPane.showMessageDialog(null, "Password cannot be empty", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String userName = authenticateUser(email,password);
             if (userName != null) {
                 JOptionPane.showMessageDialog(null, "Welcome, " + userName + "!", "Login Successful", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null, "User not found.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalid Credentials", "Login Failed", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public String authenticateUser(String email) {
+    public String authenticateUser(String email, String password) {
         String userName = null;
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT name FROM User WHERE Email = ?";
+            String query = "SELECT name FROM User WHERE Email = ? and Password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, email);
+            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
