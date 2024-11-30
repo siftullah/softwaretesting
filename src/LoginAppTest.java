@@ -53,7 +53,16 @@ public class LoginAppTest {
         assertNull(result, "Incorrect Output. User should not be logged in");
     }
 
+    @Test
+    public void testAuthenticateUser_InvalidPassword() {
 
+        String validEmail = "alicebrown@example.com";
+        String invalidPassword = "password103";
+
+        String result = loginApp.authenticateUser(validEmail);
+
+        assertNull(result, "Incorrect Output. User should not be logged in because password is invalid");
+    }
 
     @Test
     public void testAuthenticateUser_EmptyEmail() {
@@ -66,7 +75,16 @@ public class LoginAppTest {
         assertNull(result, "Incorrect Output. User should not be logged in because email is null");
     }
 
+    @Test
+    public void testAuthenticateUser_EmptyPassword() {
 
+        String validEmail = "alicebrown@example.com";
+        String emptyPassword = "";
+
+        String result = loginApp.authenticateUser(validEmail);
+
+        assertNull(result, "Incorrect Output. User should not be logged in because password is null");
+    }
 	
 	@Test
     public void testAuthenticateUser_SQLInjection() {
